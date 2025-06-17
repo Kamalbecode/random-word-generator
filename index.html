@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Word Generator: Love & Anime</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Poppins for headings, Inter for body text -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Dreamy pastel background gradient */
+            background: linear-gradient(135deg, #f7cac9, #f7d5c9, #e6e6fa, #d1f1f9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly translucent white */
+            border-radius: 30px; /* Very rounded corners */
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2); /* Soft, deep shadow */
+            padding: 40px;
+            max-width: 700px; /* Slightly wider */
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.7); /* Subtle white border */
+            backdrop-filter: blur(8px); /* Glassmorphism effect */
+            animation: fadeInScale 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            color: #3f3f46; /* Darker grey for readability */
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .input-area textarea {
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            border: 2px solid #e0b0ff; /* Soft purple border */
+            outline: none;
+            resize: vertical;
+            min-height: 100px;
+            font-size: 1.1rem;
+            color: #4b5563;
+            background-color: #fff;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .input-area textarea:focus {
+            border-color: #9333ea; /* Brighter purple on focus */
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.3); /* Soft glow */
+        }
+
+        .action-button {
+            padding: 15px 30px;
+            border-radius: 18px; /* More rounded */
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .action-button.primary {
+            background-image: linear-gradient(to right, #a78bfa, #8b5cf6); /* Enchanting purple gradient */
+            color: white;
+            border: none;
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+        }
+        .action-button.primary:hover {
+            transform: translateY(-5px); /* More pronounced lift */
+            box-shadow: 0 12px 25px rgba(139, 92, 246, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .action-button.secondary {
+            background-color: #fce7f3; /* Soft pink */
+            color: #831843; /* Darker pink text */
+            border: 2px solid #fda4af; /* Rose border */
+            box-shadow: 0 4px 10px rgba(252, 231, 243, 0.4);
+        }
+        .action-button.secondary:hover {
+            background-color: #fbcfe8; /* Lighter pink on hover */
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(252, 231, 243, 0.6);
+        }
+
+        .result-box {
+            background-color: #e0f2f7; /* Soft blue */
+            border: 2px solid #93c5fd; /* Gentle blue border */
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            font-size: 2.25rem; /* Larger result text */
+            font-weight: 800;
+            color: #1c3d88; /* Deep blue text */
+            margin-top: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            min-height: 80px;
+            display: flex; /* Use flex for vertical alignment */
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s ease-out; /* Smooth transition for result */
+            opacity: 0; /* Hidden by default for fade-in */
+            transform: translateY(10px);
+        }
+        .result-box.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .message-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            font-size: 0.95rem;
+        }
+        .message-box.bg-red-100 { background-color: #fee2e2; border-color: #fca5a5; color: #dc2626; }
+        .message-box.bg-green-100 { background-color: #d1fae5; border-color: #a7f3d0; color: #065f46; }
+        .message-box.bg-blue-100 { background-color: #dbeafe; border-color: #93c5fd; color: #1e40af; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 flex items-center justify-center min-h-screen p-4">
+    <div class="container">
+        <h1 class="text-5xl font-extrabold text-center mb-6">
+            <span style="color: #ef4444;">&hearts;</span> Dreamy Words <span style="color: #ef4444;">&hearts;</span>
+        </h1>
+        <p class="text-center text-gray-600 text-lg mb-4">
+            Enter your words below, separated by commas or new lines. (3-20 words)
+        </p>
+
+        <div class="input-area mb-6">
+            <textarea id="wordInput" placeholder="e.g., Love, Dream, Star, Blossom, Sky, Serenity, Embrace, Whisper, Magic, Heart"></textarea>
+            <div id="messageBox" class="message-box mt-4"></div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-5 justify-center">
+            <button id="generateButton" class="action-button primary">
+                <span class="text-2xl">&hearts;</span> Generate Word
+            </button>
+            <button id="clearButton" class="action-button secondary">
+                Clear Words
+            </button>
+        </div>
+
+        <div id="resultBox" class="result-box mt-8">
+            <span id="randomWord"></span>
+        </div>
+    </div>
+
+    <script>
+        const wordInput = document.getElementById('wordInput');
+        const generateButton = document.getElementById('generateButton');
+        const clearButton = document.getElementById('clearButton');
+        const randomWordDisplay = document.getElementById('randomWord');
+        const resultBox = document.getElementById('resultBox');
+        const messageBox = document.getElementById('messageBox');
+
+        let words = []; // Array to store user's words
+
+        /**
+         * Displays a message in the message box.
+         * @param {string} message - The message to display.
+         * @param {string} type - 'success', 'error', or 'info' to determine styling.
+         */
+        function showMessage(message, type = 'info') {
+            messageBox.textContent = message;
+            messageBox.style.display = 'block';
+            if (type === 'error') {
+                messageBox.className = 'message-box mt-4 bg-red-100 border-red-400 text-red-700';
+            } else if (type === 'success') {
+                messageBox.className = 'message-box mt-4 bg-green-100 border-green-400 text-green-700';
+            } else { // info (blue for informational messages)
+                messageBox.className = 'message-box mt-4 bg-blue-100 border-blue-400 text-blue-700';
+            }
+            // Hide message after 3 seconds
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, 3000);
+        }
+
+        /**
+         * Parses the user input from the textarea and validates the word count.
+         * @returns {Array<string>|null} An array of validated words, or null if validation fails.
+         */
+        function getValidatedWords() {
+            const rawInput = wordInput.value;
+            // Split by commas, newlines, or any whitespace, then trim and filter empty strings
+            const parsedWords = rawInput.split(/[\s,]+/)
+                                       .map(word => word.trim())
+                                       .filter(word => word.length > 0);
+
+            if (parsedWords.length < 3) {
+                showMessage("Please enter at least 3 words.", "error");
+                return null;
+            }
+            if (parsedWords.length > 20) {
+                showMessage("Please enter no more than 20 words.", "error");
+                return null;
+            }
+
+            return parsedWords;
+        }
+
+        /**
+         * Generates and displays a random word from the stored list.
+         */
+        function generateRandomWord() {
+            words = getValidatedWords(); // Always re-validate and get fresh words
+            if (!words) {
+                // Validation failed, message already shown by getValidatedWords
+                return;
+            }
+
+            if (words.length === 0) {
+                showMessage("No words available. Please enter some words first!", "info");
+                return;
+            }
+
+            // Hide the result box and reset content before showing new result
+            resultBox.classList.remove('show');
+            randomWordDisplay.textContent = ''; // Clear text immediately
+
+            // Short delay to ensure transition plays
+            setTimeout(() => {
+                const randomIndex = Math.floor(Math.random() * words.length);
+                const chosenWord = words[randomIndex];
+
+                randomWordDisplay.textContent = chosenWord;
+                resultBox.classList.add('show'); // Show with animation
+                showMessage("A beautiful word awaits!", "success");
+            }, 100); // Small delay to allow CSS transition to reset properly
+        }
+
+        /**
+         * Clears the input area and resets the displayed word.
+         */
+        function clearAll() {
+            wordInput.value = '';
+            words = [];
+            resultBox.classList.remove('show');
+            randomWordDisplay.textContent = '';
+            showMessage("Words cleared!", "info");
+        }
+
+        // --- Event Listeners ---
+        generateButton.addEventListener('click', generateRandomWord);
+        clearButton.addEventListener('click', clearAll);
+
+        // Initial message on load
+        window.onload = () => {
+            showMessage("Ready to discover a word?", "info");
+        };
+    </script>
+</body>
+</html>
