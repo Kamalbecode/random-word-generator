@@ -1,0 +1,2 @@
+Completely html based application where you can play games i generating random numbers push code. In this application you can generate words or decide words as per your own wish and there are should be minimum 3 words for maximum 20 words.
+The purpose of this application is to play game like you will write between three to 20 words and then click on the word and the word may be like a play Ludo do a dare do a task mattie ATC any type of command for a game which you have to complete and spell it your own challenges you return in the language
